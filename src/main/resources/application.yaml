@@ -1,0 +1,23 @@
+
+server:
+    port: 8082
+
+spring:
+  main:
+    allow-circular-references: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    database: postgresql
+    hibernate: ddl-auto:none
+
+
+
+
+
+
+

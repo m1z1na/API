@@ -72,7 +72,7 @@ public class UserController {
     }
 
     @Operation(summary = "Разорвать дружбу")
-    @PostMapping("/breakFriendship/{id}")
+    @DeleteMapping("/breakFriendship/{id}")
     public ResponseEntity<String> breakFriendship(@PathVariable @Parameter(description = "id записи") Long id, Authentication authentication) {
         Long userId = userData.findByUsername(authentication.getName()).get().getId();
         return friendData.breakFriendship(new Friend(id, userId), userId);

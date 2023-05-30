@@ -25,7 +25,7 @@ public class RegisterDto {
 
     @Pattern(message = "Bad formed person name: ${validatedValue}",
             regexp = "^[A-Z][a-z]*(\\s(([a-z]{1,3})|(([a-z]+\\')?[A-Z][a-z]*)))*$")
-    @Size(min = 6, max = 16, message = "Имя пользователя от 8 до 16 символов")
+    @Size(min = 6, max = 16, message = "Имя пользователя от 6 до 16 символов")
     @Schema(description = "Имя пользователя")
     private String username;
 

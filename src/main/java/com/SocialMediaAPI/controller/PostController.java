@@ -47,7 +47,6 @@ public class PostController {
     }
 
 
-    //    @PreAuthorize("#userId == authentication.name")//("@userSecurity.hasUserId(authentication,#userId)")
 //    @PreAuthorize("@userSecurity.hasUserId(authentication,#userId)")
     @Operation(summary = "Получить мои посты")
     @GetMapping(value = "/")
@@ -86,7 +85,7 @@ public class PostController {
 
     @Operation(summary = "Обновить пост")
     @PutMapping(path = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-//    public ResponseEntity<Post> update(@RequestParam("file1") MultipartFile file, PostDTO newPost )
+//    public ResponseEntity<Post> update(@RequestParam("file") MultipartFile file, PostDTO newPost )
     public ResponseEntity<Post> update(@RequestParam("id") Long id,
                                        @RequestParam("text") String text,
                                        @RequestParam("description") String description,

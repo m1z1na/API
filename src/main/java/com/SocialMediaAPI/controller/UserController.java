@@ -38,8 +38,6 @@ public class UserController {
     public ResponseEntity<Follower> follow(@PathVariable @Parameter(description = "id на которого хотят подписаться") Long id, Authentication authentication) {
         Long userId = userData.findByUsername(authentication.getName()).get().getId();
         return friendData.follow(new Follower(id, userId));
-
-
     }
 
     @Operation(summary = "Отписаться")
@@ -51,7 +49,7 @@ public class UserController {
         if (follower.getId() == 0 || follower.getFollower() != userId) {
             return ResponseEntity.status(403).body("Доступ запрещен");
         } else {
-            return friendData.unfollow(id);
+            return friendData.unfollow(id, userId );
         }
     }
 

@@ -41,8 +41,15 @@ public class FriendServiceImplementation implements FriendService {
     }
 
     @Override
-    public ResponseEntity unfollow(Long id) {
-        // проверка что не является другом, если является дружбу нужно разоравать
+    public ResponseEntity unfollow(Long id, Long myId) {
+        // !проверка что не является другом, если является дружбу нужно разоравать
+        Friend friends = friendRepository.findByFriendAndId(id, myId);
+        if (friends == null) {
+            friends = friendRepository.findByFriendAndId(myId, id);
+        }
+        if (friends != null) {
+            friendRepository.delete(friends);
+        }
         followerRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
@@ -63,17 +70,17 @@ public class FriendServiceImplementation implements FriendService {
     @Transactional
     public ResponseEntity<Friend> acceptRequest(RequestFriend request) {
         // принять дружбу и стать подписчиком
+
         Friend friend = new Friend(request.getUserFrom(), request.getUserTo());
         requestfriendRepository.delete(request);
         return ResponseEntity.ok().body(friendRepository.save(friend));
-//        /*находим заявку по id*/
-//        if( requestfriendRepository.geById(id))
-//        return null;
+
     }
 
     @Override
     public ResponseEntity<String> breakFriendship(Friend friend, Long id) {
         // проверить что они друзья? если да, то разорвать дружбу и отписаться
+
         Follower follower = new Follower();
         follower.setBloger(friend.getId() == id ? friend.getFriend() : friend.getId());
         follower.setFollower(id);

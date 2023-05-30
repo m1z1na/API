@@ -13,7 +13,7 @@ public interface FriendService {
 
     Follower getFollow(Long id);
 
-    ResponseEntity unfollow(Long id);
+    ResponseEntity unfollow(Long id, Long myId);
 
     ResponseEntity<RequestFriend> sendRequest(RequestFriend request);
 

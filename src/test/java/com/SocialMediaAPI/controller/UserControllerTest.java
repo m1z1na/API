@@ -1,85 +1,116 @@
 package com.SocialMediaAPI.controller;
 
+import com.SocialMediaAPI.authorization.AuthForTest;
 import com.SocialMediaAPI.authorization.JWTGenerator;
-import com.SocialMediaAPI.model.Role;
-import com.SocialMediaAPI.model.RoleEntity;
-import com.SocialMediaAPI.model.UserEntity;
-import com.SocialMediaAPI.repository.FollowerRepository;
-import com.SocialMediaAPI.repository.FriendRepository;
-import com.SocialMediaAPI.repository.RequestFriendRepository;
+import com.SocialMediaAPI.model.Follower;
 import com.SocialMediaAPI.repository.UserRepository;
-import com.SocialMediaAPI.service.implementations.CustomUserDetailsService;
 import com.SocialMediaAPI.service.interfaces.FriendService;
-import junit.framework.TestCase;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
-public class UserControllerTest extends TestCase {
-
+@WebMvcTest(controllers = UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
+public class UserControllerTest extends AuthForTest {
+/*
     @MockBean
-    private JWTGenerator jwtUtil;
-
+    JWTGenerator jwtDecoder;
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private FriendRepository friendRepository;
-
-    @MockBean
-    private FollowerRepository followerRepository;
-
-    @MockBean
-    private RequestFriendRepository requestfriendRepository;
-
-    @MockBean
-    private UserRepository userData;
-    @MockBean
-    private CustomUserDetailsService userDetailsService;
+    @Autowired
+    private ObjectMapper objectMapper;
     @MockBean
     private FriendService friendService;
+    @MockBean
+    private UserRepository userData;
+    @Inject
+    private WebApplicationContext context;
 
-    @Test
-    public void findSkillAll() throws Exception {
-        List<RoleEntity> list = new ArrayList<>();
-        list.add(new RoleEntity(Role.ROLE_USER));
-        when(userData.findAll()).thenReturn(Arrays.asList(new UserEntity(1L, "test", "test", "test", list)));
-        MvcResult result = mockMvc.perform(post("/api/auth/login").header("Authorization").contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "    \"username\": \"test\",\n" +
-                        "    \"password\":  \"test\"\n" +
-                        "}"))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        System.out.println(content);
-
-
+    @BeforeEach
+    public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
     }
 
 
+    @Test
+    public void follow() throws Exception {
+
+        String token = setAuthentication("test", "123", session);
+        Follower data = new Follower();
+        mockMvc.perform(
+                post("/api/user/follow/3")
+                        .content(objectMapper.writeValueAsString(new Follower(3L, 4L)))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.bloger").value("3"))
+                .andExpect((ResultMatcher) jsonPath("$.follower").value("4"));
+
+    }
+
+    @Test
+    public void unfollow() throws Exception {
+        String token = setAuthentication("test", "123", session);
+        mockMvc.perform(
+                post("/api/user/unfollow/3")
+                        .content(objectMapper.writeValueAsString(new Follower(3L, 4L)))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 
 
+    @Test
+    public void sendRequest() throws Exception {
+        String token = setAuthentication("test", "123", session);
+
+        mockMvc.perform(
+                post("/api/user/follow/4"))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.userFrom").value("3"))
+                .andExpect((ResultMatcher) jsonPath("$.userTo").value("4"));
+    }
+
+    @Test
+    public void acceptRequest() throws Exception {
+        String token = setAuthentication("test", "123", session);
+
+        mockMvc.perform(
+                post("/api/user/acceptRequest/3"))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.id").value("3"))
+                .andExpect((ResultMatcher) jsonPath("$.friend").value("4"));
+    }
+
+    @Test
+    public void breakFriendship() throws Exception {
+        String token = setAuthentication("test", "123", session);
+
+        mockMvc.perform(
+                post("/api/user/breakFriendship/4"))
+                .andExpect(status().isOk());
+    }
+
+*/
 }

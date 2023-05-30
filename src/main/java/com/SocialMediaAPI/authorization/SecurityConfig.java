@@ -1,6 +1,7 @@
 package com.SocialMediaAPI.authorization;
 
 
+import com.SocialMediaAPI.service.implementations.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,13 +38,9 @@ public class SecurityConfig  {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**",  "/api/swagger-ui/**","/api/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
-//                .authorizeRequests()
-//                .antMatchers("/api/auth/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
                 .httpBasic();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

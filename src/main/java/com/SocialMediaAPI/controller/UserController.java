@@ -1,51 +1,84 @@
 package com.SocialMediaAPI.controller;
 
+import com.SocialMediaAPI.model.Follower;
+import com.SocialMediaAPI.model.Friend;
+import com.SocialMediaAPI.model.RequestFriend;
+import com.SocialMediaAPI.repository.UserRepository;
+import com.SocialMediaAPI.service.interfaces.FriendService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 
 @RestController
 @RequestMapping("/api/user")
-
-@Tag(name = "Пользователь",
-        description = "Класс-контроллер для получения и обновления пользовательской информации")
+@Tag(name = "Подписки",
+        description = "Класс-контроллер для подписки")
 public class UserController {
 
+    @Autowired
+    private final FriendService friendData;
+    @Autowired
+    private final UserRepository userData;
 
-        @Operation(summary = "Получить всех друзей")
-        @GetMapping("/getFriend")
-//        @GetMapping("/{id}")
-//        public String findById(@PathVariable int id) {
-        public String findById( ) {
-//        return this.mapstructMapper.userEducationToUserEducationResponse(usersEducation.getEducationById(id));
-            return "123";
-        }
 
-//    @Operation(summary = "Получить страницу/Найти сотрудника по маске ФИО")
-//    @GetMapping("/page")
-//    Page<UsersData> getAll(
-//            @RequestParam(value = "fio") Optional<String> fio,
-//            @RequestParam(value = "offset", defaultValue = "0") @Min(0) Integer offset,
-//            @RequestParam(value = "limit", defaultValue = "20") @Min(1) @Max(100) Integer limit,
-//            @RequestParam(value = "sort", defaultValue = "id") String sortField,
-//            @RequestParam(value = "sortBy", defaultValue = "ASC" ) Sort.Direction sort
-//    ) {
-//        String searchValue;
-//        if (!fio.isPresent()) {
-//            searchValue = "%";
-//        } else {
-//            searchValue = "%" + fio.get() + "%";
-//        }
-////        return userData.findByFio(PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, sortField)), searchValue.toLowerCase());
-//        return userData.findByFio(PageRequest.of(offset, limit, Sort.by(sort, sortField)), searchValue.toLowerCase());
-////        return userData.findByFio(PageRequest.of(offset, limit, UserDataSort.ID_ASC.getSortValue()), searchValue.toLowerCase());
-//    }
+    @Autowired
+    public UserController(FriendService friendData, UserRepository userData) {
+        this.friendData = friendData;
+        this.userData = userData;
     }
+
+
+    @Operation(summary = "Подписаться")
+    @PostMapping("/follow/{id}")
+    public ResponseEntity<Follower> follow(@PathVariable @Parameter(description = "id на которого хотят подписаться") Long id, Authentication authentication) {
+        Long userId = userData.findByUsername(authentication.getName()).get().getId();
+        return friendData.follow(new Follower(id, userId));
+
+
+    }
+
+    @Operation(summary = "Отписаться")
+    @DeleteMapping("unfollow/{id}")
+    public ResponseEntity delete(@PathVariable
+                                 @Parameter(description = "id записи") Long id, Authentication authentication) {
+        Long userId = userData.findByUsername(authentication.getName()).get().getId();
+        Follower follower = friendData.getFollow(id);
+        if (follower.getId() == 0 || follower.getFollower() != userId) {
+            return ResponseEntity.status(403).body("Доступ запрещен");
+        } else {
+            return friendData.unfollow(id);
+        }
+    }
+
+
+    @Operation(summary = "Подружиться")
+    @PostMapping("/sendRequest/{id}")
+    public ResponseEntity<RequestFriend> sendRequest(@PathVariable @Parameter(description = "id с кем хотят подписаться") Long id, Authentication authentication) {
+        Long userId = userData.findByUsername(authentication.getName()).get().getId();
+        return friendData.sendRequest(new RequestFriend(id, userId));
+
+
+    }
+
+    @Operation(summary = "Принять предложение о дружбе")
+    @PostMapping("/acceptRequest/{id}")
+    public ResponseEntity<Friend> acceptRequest(@PathVariable @Parameter(description = "id записи") Long id, Authentication authentication) {
+        Long userId = userData.findByUsername(authentication.getName()).get().getId();
+        return friendData.acceptRequest(new RequestFriend(id, userId));
+
+    }
+
+    @Operation(summary = "Разорвать дружбу")
+    @PostMapping("/breakFriendship/{id}")
+    public ResponseEntity<String> breakFriendship(@PathVariable @Parameter(description = "id записи") Long id, Authentication authentication) {
+        Long userId = userData.findByUsername(authentication.getName()).get().getId();
+        return friendData.breakFriendship(new Friend(id, userId), userId);
+
+    }
+
+}

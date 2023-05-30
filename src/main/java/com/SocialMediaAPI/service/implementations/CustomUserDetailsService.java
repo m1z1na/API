@@ -1,4 +1,4 @@
-package com.SocialMediaAPI.authorization;
+package com.SocialMediaAPI.service.implementations;
 
 
 import com.SocialMediaAPI.model.RoleEntity;

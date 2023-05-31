@@ -2,7 +2,7 @@ package com.SocialMediaAPI.service.implementations;
 
 import com.SocialMediaAPI.model.Post;
 import com.SocialMediaAPI.repository.PostRepository;
-import com.SocialMediaAPI.service.interfaces.PostService;
+import com.SocialMediaAPI.service.api.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

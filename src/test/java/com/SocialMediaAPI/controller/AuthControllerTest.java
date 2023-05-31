@@ -53,7 +53,7 @@ class AuthControllerTest extends AuthForTest {
         Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.of(user));
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/auth/login")
+                MockMvcRequestBuilders.post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(login)))
                 .andExpect(status().isOk());
@@ -68,7 +68,7 @@ class AuthControllerTest extends AuthForTest {
         Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.of(user));
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/auth/register")
+                MockMvcRequestBuilders.post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(register)))
                 .andExpect(status().isCreated());

@@ -10,25 +10,25 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/messenger")
+@RequestMapping("/api/v1/messenger")
 @Tag(name = "Мои друзья",
         description = "Класс-контроллер для чата")
 public class MessengerController {
 
     @Operation(summary = "Получить всех друзей")
-    @GetMapping("/getFriend")
+    @GetMapping("/friend")
     public String getFriend() {
         return "Тут будет чат";
     }
 
     @Operation(summary = "Отправить сообщение другу")
-    @PostMapping("/sendMessage/{id}")
+    @PostMapping("/message/{id}")
     public String sendMessage(@RequestBody String text) {
         return "Тут будет чат";
     }
 
     @Operation(summary = "Отобразить чат с ...")
-    @PostMapping("/getChat/{id}")
+    @GetMapping("/chat/{id}")
     public String getChat(@RequestParam Long id) {
         return "Тут будет чат";
     }

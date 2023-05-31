@@ -4,7 +4,7 @@ package com.SocialMediaAPI.controller;
 import com.SocialMediaAPI.model.Post;
 import com.SocialMediaAPI.model.UserEntity;
 import com.SocialMediaAPI.repository.UserRepository;
-import com.SocialMediaAPI.service.interfaces.PostService;
+import com.SocialMediaAPI.service.api.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
@@ -29,7 +29,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/api/v1//post")
 //@EnableGlobalMethodSecurity(prePostEnabled=true)
 @Tag(name = "Посты",
         description = "Класс-контроллер для взаимодействия с постами ")

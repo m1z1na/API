@@ -4,7 +4,7 @@ import com.SocialMediaAPI.model.Follower;
 import com.SocialMediaAPI.model.Friend;
 import com.SocialMediaAPI.model.RequestFriend;
 import com.SocialMediaAPI.repository.UserRepository;
-import com.SocialMediaAPI.service.interfaces.FriendService;
+import com.SocialMediaAPI.service.api.FriendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/user")
 @Tag(name = "Подписки",
         description = "Класс-контроллер для подписки")
 public class UserController {
@@ -34,14 +34,14 @@ public class UserController {
 
 
     @Operation(summary = "Подписаться")
-    @PostMapping("/follow/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<Follower> follow(@PathVariable @Parameter(description = "id на которого хотят подписаться") Long id, Authentication authentication) {
         Long userId = userData.findByUsername(authentication.getName()).get().getId();
         return friendData.follow(new Follower(id, userId));
     }
 
     @Operation(summary = "Отписаться")
-    @DeleteMapping("unfollow/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable
                                  @Parameter(description = "id записи") Long id, Authentication authentication) {
         Long userId = userData.findByUsername(authentication.getName()).get().getId();
@@ -55,7 +55,7 @@ public class UserController {
 
 
     @Operation(summary = "Подружиться")
-    @PostMapping("/sendRequest/{id}")
+    @PostMapping("/request/{id}")
     public ResponseEntity<RequestFriend> sendRequest(@PathVariable @Parameter(description = "id с кем хотят подписаться") Long id, Authentication authentication) {
         Long userId = userData.findByUsername(authentication.getName()).get().getId();
         return friendData.sendRequest(new RequestFriend(id, userId));
@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @Operation(summary = "Принять предложение о дружбе")
-    @PostMapping("/acceptRequest/{id}")
+    @PostMapping("/friendship/{id}")
     public ResponseEntity<Friend> acceptRequest(@PathVariable @Parameter(description = "id записи") Long id, Authentication authentication) {
         Long userId = userData.findByUsername(authentication.getName()).get().getId();
         return friendData.acceptRequest(new RequestFriend(id, userId));
@@ -72,7 +72,7 @@ public class UserController {
     }
 
     @Operation(summary = "Разорвать дружбу")
-    @DeleteMapping("/breakFriendship/{id}")
+    @DeleteMapping("/friendship/{id}")
     public ResponseEntity<String> breakFriendship(@PathVariable @Parameter(description = "id записи") Long id, Authentication authentication) {
         Long userId = userData.findByUsername(authentication.getName()).get().getId();
         return friendData.breakFriendship(new Friend(id, userId), userId);

@@ -6,7 +6,7 @@ import com.SocialMediaAPI.model.RequestFriend;
 import com.SocialMediaAPI.repository.FollowerRepository;
 import com.SocialMediaAPI.repository.FriendRepository;
 import com.SocialMediaAPI.repository.RequestFriendRepository;
-import com.SocialMediaAPI.service.interfaces.FriendService;
+import com.SocialMediaAPI.service.api.FriendService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.SocialMediaAPI.service.interfaces;
+package com.SocialMediaAPI.service.api;
 
 
 import com.SocialMediaAPI.model.Post;
